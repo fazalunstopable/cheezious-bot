@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cheezious Menu Chatbot 🍕</title>
+  <style>
+    body {
+      background: #fffaf0;
+      font-family: 'Poppins', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .chat-container {
+      background: white;
+      width: 400px;
+      border-radius: 15px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .chat-box {
+      padding: 15px;
+      flex: 1;
+      overflow-y: auto;
+    }
+    .chat-message {
+      margin: 10px 0;
+      padding: 10px 14px;
+      border-radius: 12px;
+      max-width: 80%;
+    }
+    .user {
+      background: #ffd966;
+      align-self: flex-end;
+    }
+    .bot {
+      background: #eee;
+      align-self: flex-start;
+    }
+    .input-box {
+      display: flex;
+      border-top: 1px solid #ccc;
+    }
+    input {
+      flex: 1;
+      border: none;
+      padding: 12px;
+      outline: none;
+      font-size: 16px;
+    }
+    button {
+      border: none;
+      background: #ffb347;
+      padding: 12px 18px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="chat-container">
+    <div class="chat-box" id="chatBox">
+      <div class="chat-message bot">
+        👋 Hi! I'm CheezyBot. What would you like to order today?
+        <br>Type "menu" to see our delicious items 🍕
+      </div>
+    </div>
+    <div class="input-box">
+      <input type="text" id="userInput" placeholder="Type your message..." />
+      <button onclick="sendMessage()">Send</button>
+    </div>
+  </div>
+
+  <script>
+    const chatBox = document.getElementById('chatBox');
+    const userInput = document.getElementById('userInput');
+
+    const menu = {
+      pizza: ["Cheezy Melt", "Pepperoni Blast", "Chicken Fajita", "Veggie Delight"],
+      burgers: ["Zinger Burger", "Cheezy Burger", "Beef Blast"],
+      sides: ["Fries", "Garlic Bread", "Wings"],
+      drinks: ["Coke", "Sprite", "Water"]
+    };
+
+    function addMessage(message, sender) {
+      const msgDiv = document.createElement('div');
+      msgDiv.classList.add('chat-message', sender);
+      msgDiv.innerHTML = message;
+      chatBox.appendChild(msgDiv);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function sendMessage() {
+      const text = userInput.value.trim();
+      if (text === '') return;
+      addMessage(text, 'user');
+      userInput.value = '';
+      setTimeout(() => botReply(text.toLowerCase()), 600);
+    }
+
+    function botReply(input) {
+      let reply = '';
+
+      if (input.includes('menu')) {
+        reply = `
+          🧀 Here's our menu:<br>
+          🍕 Pizzas: ${menu.pizza.join(', ')}<br>
+          🍔 Burgers: ${menu.burgers.join(', ')}<br>
+          🍟 Sides: ${menu.sides.join(', ')}<br>
+          🥤 Drinks: ${menu.drinks.join(', ')}<br>
+          Type the category name (pizza, burger, etc.) for details.
+        `;
+      } 
+      else if (menu.pizza.some(item => input.includes(item.toLowerCase()))) {
+        reply = "That’s a great choice! 🍕 It’ll be ready in 15 minutes.";
+      } 
+      else if (input.includes('pizza')) {
+        reply = `Our pizzas: ${menu.pizza.join(', ')}`;
+      } 
+      else if (input.includes('burger')) {
+        reply = `Our burgers: ${menu.burgers.join(', ')}`;
+      } 
+      else if (input.includes('side')) {
+        reply = `Our sides: ${menu.sides.join(', ')}`;
+      } 
+      else if (input.includes('drink')) {
+        reply = `Our drinks: ${menu.drinks.join(', ')}`;
+      } 
+      else if (input.includes('thanks') || input.includes('thank you')) {
+        reply = "You're welcome! 😊 Enjoy your meal!";
+      } 
+      else {
+        reply = "Sorry, I didn't get that. Type 'menu' to see what we offer!";
+      }
+
+      addMessage(reply, 'bot');
+    }
+  </script>
+
+</body>
+</html>
